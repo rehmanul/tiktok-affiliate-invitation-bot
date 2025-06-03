@@ -1,0 +1,35 @@
+<<<<<<< HEAD
+
+services:
+  - type: web
+    name: digi4u-affiliate-bot
+    env: docker
+    buildCommand: docker build -t digi4u-affiliate-bot .
+    startCommand: docker run -p $PORT:5000 digi4u-affiliate-bot
+    envVars:
+      - key: CHROME_PROFILE_PATH
+        value: /chrome-profile
+      - key: PORT
+        value: 5000
+=======
+services:
+  - type: web
+    name: tiktok-affiliate-bot
+    env: docker
+    region: frankfurt  # Choose your preferred region
+    plan: standard
+    healthCheckPath: /status
+    envVars:
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+      - key: TIKTOK_EMAIL
+        sync: false  # This will be set manually in Render dashboard
+      - key: TIKTOK_PASSWORD
+        sync: false  # This will be set manually in Render dashboard
+      - key: FLASK_ENV
+        value: production
+    disk:
+      name: bot-data
+      mountPath: /app/data
+      sizeGB: 1
+>>>>>>> 0f14b6f (Initial commit of relevant project files)

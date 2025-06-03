@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digi4u TikTok Affiliate Bot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8 text-center text-gray-800">
+            Digi4u TikTok Affiliate Bot
+        </h1>
+        
+        <!-- Configuration Form -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Campaign Configuration</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Chrome Profile Path
+                    </label>
+                    <input type="text" id="chrome_profile" 
+                           class="w-full p-2 border rounded"
+                           value="{{ default_profile }}"
+                           placeholder="/path/to/chrome/profile">
+                    <p class="mt-1 text-sm text-gray-500">Default path is set for deployment</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Minimum Followers
+                    </label>
+                    <input type="number" id="min_followers" 
+                           class="w-full p-2 border rounded"
+                           value="10000">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Maximum Invites
+                    </label>
+                    <input type="number" id="max_invites" 
+                           class="w-full p-2 border rounded"
+                           value="20">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Minimum GMV (£)
+                    </label>
+                    <input type="number" id="min_gmv" 
+                           class="w-full p-2 border rounded"
+                           value="5000">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Category
+                    </label>
+                    <select id="category" class="w-full p-2 border rounded">
+                        <option value="phonerepair">Phone Repair</option>
+                        <option value="techrepair">Tech Repair</option>
+                        <option value="gadgetrepair">Gadget Repair</option>
+                        <option value="iphonerepair">iPhone Repair</option>
+                        <option value="devicerepair">Device Repair</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Promotion Type
+                    </label>
+                    <select id="promotion_type" class="w-full p-2 border rounded">
+                        <option value="video">Video</option>
+                        <option value="live">Live</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="mt-6 flex justify-center gap-4">
+                <button id="startBtn" 
+                        class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
+                    Start Campaign
+                </button>
+                <button id="stopBtn" 
+                        class="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600 opacity-50"
+                        disabled>
+                    Stop Campaign
+                </button>
+            </div>
+        </div>
+        
+        <!-- Status Display -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold mb-4">Campaign Status</h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-gray-50 p-4 rounded">
+                    <div class="text-sm text-gray-600">Status</div>
+                    <div id="status" class="font-semibold">Not Running</div>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded">
+                    <div class="text-sm text-gray-600">Invites Sent</div>
+                    <div id="invites_sent" class="font-semibold">0</div>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded">
+                    <div class="text-sm text-gray-600">Creators Found</div>
+                    <div id="creators_found" class="font-semibold">0</div>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded">
+                    <div class="text-sm text-gray-600">Current Category</div>
+                    <div id="current_category" class="font-semibold">-</div>
+                </div>
+            </div>
+            
+            <!-- Generated Invitation Links -->
+            <div class="mt-6">
+                <h3 class="text-lg font-semibold mb-3">Generated Invitation Links</h3>
+                <div id="invite_links" class="space-y-2">
+                    <!-- Links will be added here dynamically -->
+                </div>
+            </div>
+            
+            <div class="bg-gray-50 p-4 rounded mt-4">
+                <div class="text-sm text-gray-600">Last Error</div>
+                <div id="last_error" class="font-semibold text-red-500">-</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function updateStatus() {
+            $.get('/api/status', function(data) {
+                $('#status').text(data.running ? 'Running' : 'Stopped');
+                $('#invites_sent').text(data.invites_sent);
+                $('#creators_found').text(data.creators_found);
+                $('#current_category').text(data.current_category || '-');
+                
+                // Update invitation links
+                if (data.invite_links && data.invite_links.length > 0) {
+                    const linksHtml = data.invite_links.map(link => `
+                        <div class="bg-gray-50 p-3 rounded">
+                            <div class="text-sm font-medium">${link.username}</div>
+                            <a href="${link.link}" target="_blank" 
+                               class="text-blue-500 hover:underline break-all">
+                                ${link.link}
+                            </a>
+                            <div class="text-xs text-gray-500">
+                                Created: ${new Date(link.created_at).toLocaleString()}
+                            </div>
+                        </div>
+                    `).join('');
+                    $('#invite_links').html(linksHtml);
+                }
+                
+                $('#last_error').text(data.last_error || '-');
+                
+                if (data.running) {
+                    $('#startBtn').prop('disabled', true).addClass('opacity-50');
+                    $('#stopBtn').prop('disabled', false).removeClass('opacity-50');
+                } else {
+                    $('#startBtn').prop('disabled', false).removeClass('opacity-50');
+                    $('#stopBtn').prop('disabled', true).addClass('opacity-50');
+                }
+            });
+        }
+        
+        setInterval(updateStatus, 1000);
+        
+        $('#startBtn').click(function() {
+            const config = {
+                chrome_profile: $('#chrome_profile').val(),
+                category: $('#category').val(),
+                promotion_type: $('#promotion_type').val(),
+                min_followers: parseInt($('#min_followers').val()),
+                max_invites: parseInt($('#max_invites').val()),
+                min_gmv: parseInt($('#min_gmv').val())
+            };
+            
+            $.ajax({
+                url: '/api/start',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(config),
+                success: function(response) {
+                    if (!response.success) {
+                        alert('Error: ' + response.error);
+                    }
+                }
+            });
+        });
+        
+        $('#stopBtn').click(function() {
+            $.get('/api/stop');
+        });
+        
+        // Initial status update
+        updateStatus();
+    </script>
+</body>
+</html>

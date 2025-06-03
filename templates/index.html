@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Affiliate Bot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">TikTok Affiliate Bot Dashboard</h1>
+                <p class="mt-2 text-sm text-gray-600">Automate your TikTok affiliate invitations efficiently and safely</p>
+            </div>
+            <div>
+                <a href="/campaigns" class="text-blue-600 hover:underline font-semibold">Manage Campaigns</a>
+            </div>
+        </div>
+
+        <!-- Status Card -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-900">Bot Status</h2>
+            <p id="accountInfo" class="text-sm text-gray-600">Account: Loading...</p>
+
+    <script>
+        async function fetchUserEmail() {
+            try {
+                const response = await fetch('/user_email');
+                const data = await response.json();
+                const accountInfo = document.getElementById('accountInfo');
+                if (data.email) {
+                    accountInfo.textContent = `Account: ${data.email}`;
+                } else {
+                    accountInfo.textContent = 'Account: Not logged in';
+                }
+            } catch (error) {
+                console.error('Failed to fetch user email:', error);
+            }
+        }
+        fetchUserEmail();
+    </script>
+=======
+            <p id="accountInfo" class="text-sm text-gray-600">Account: Loading...</p>
+
+    <script>
+        async function fetchUserEmail() {
+            try {
+                const response = await fetch('/user_email');
+                const data = await response.json();
+                const accountInfo = document.getElementById('accountInfo');
+                if (data.email) {
+                    accountInfo.textContent = `Account: ${data.email}`;
+                } else {
+                    accountInfo.textContent = 'Account: Not logged in';
+                }
+            } catch (error) {
+                console.error('Failed to fetch user email:', error);
+            }
+        }
+        fetchUserEmail();
+    </script>
+                </div>
+                <span id="statusBadge" class="px-3 py-1 text-sm font-medium rounded-full">
+                    <!-- Status badge will be updated via JavaScript -->
+                </span>
+            </div>
+            
+            <!-- Log Display -->
+            <div class="mt-4 bg-gray-50 rounded-lg p-4 h-32 overflow-y-auto font-mono text-sm">
+                <div id="logDisplay" class="whitespace-pre-wrap"></div>
+            </div>
+            <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <p class="text-sm text-gray-600">Current Status</p>
+                    <p id="currentStatus" class="mt-1 text-lg font-medium text-gray-900">Idle</p>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <p class="text-sm text-gray-600">Total Invites Sent</p>
+                    <p id="totalInvites" class="mt-1 text-lg font-medium text-gray-900">0</p>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <p class="text-sm text-gray-600">Last Update</p>
+                    <p id="lastUpdate" class="mt-1 text-lg font-medium text-gray-900">-</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <h2 class="text-lg font-semibold text-gray-900 mb-6">Control Panel</h2>
+            
+            <form id="botForm" class="space-y-6">
+                <!-- Filter Settings -->
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Minimum Followers</label>
+                        <input type="number" name="min_followers" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm" value="1000">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Maximum Followers</label>
+                        <input type="number" name="max_followers" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm" value="2000">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Minimum GMV</label>
+                        <input type="number" name="min_gmv" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm" value="1000">
+                    </div>
+                </div>
+
+                <!-- Categories -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Categories</label>
+                    <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="categories" value="Phone & Electronics" class="rounded border-gray-300 text-black focus:ring-black" checked>
+                            <span class="ml-2 text-sm text-gray-700">Phone & Electronics</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="categories" value="Computer and office equipment" class="rounded border-gray-300 text-black focus:ring-black" checked>
+                            <span class="ml-2 text-sm text-gray-700">Computer and office equipment</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Max Invites -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Maximum Invitations to Send</label>
+                    <input type="number" name="max_invites" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm" value="50">
+                </div>
+
+                <!-- Control Buttons -->
+                <div class="flex space-x-4">
+                    <button type="submit" id="startBtn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black">
+                        Start Bot
+                    </button>
+                    <button type="button" id="stopBtn" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black" disabled>
+                        Stop Bot
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Error Alert -->
+        <div id="errorAlert" class="hidden mt-8 rounded-md bg-red-50 p-4">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-800">Error</h3>
+                    <div class="mt-2 text-sm text-red-700">
+                        <p id="errorMessage"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const form = document.getElementById('botForm');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const statusBadge = document.getElementById('statusBadge');
+        const currentStatus = document.getElementById('currentStatus');
+        const totalInvites = document.getElementById('totalInvites');
+        const lastUpdate = document.getElementById('lastUpdate');
+        const errorAlert = document.getElementById('errorAlert');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Update status badge
+        function updateStatusBadge(isRunning) {
+            if (isRunning) {
+                statusBadge.className = 'px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800 animate-pulse';
+                statusBadge.textContent = 'Running';
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+            } else {
+                statusBadge.className = 'px-3 py-1 text-sm font-medium rounded-full bg-gray-100 text-gray-800';
+                statusBadge.textContent = 'Stopped';
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+            }
+        }
+
+        // Show error/success message
+        function showError(message, type = 'error') {
+            const errorAlert = document.getElementById('errorAlert');
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            
+            if (type === 'success') {
+                errorAlert.classList.remove('bg-red-50');
+                errorAlert.classList.add('bg-green-50');
+                errorMessage.classList.remove('text-red-700');
+                errorMessage.classList.add('text-green-700');
+            } else {
+                errorAlert.classList.remove('bg-green-50');
+                errorAlert.classList.add('bg-red-50');
+                errorMessage.classList.remove('text-green-700');
+                errorMessage.classList.add('text-red-700');
+            }
+            
+            errorAlert.classList.remove('hidden');
+            
+            // Hide message after 5 seconds
+            setTimeout(() => {
+                errorAlert.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Update status
+        function appendLog(message) {
+            const logDisplay = document.getElementById('logDisplay');
+            const timestamp = new Date().toLocaleTimeString();
+            logDisplay.innerHTML += `[${timestamp}] ${message}\n`;
+            logDisplay.scrollTop = logDisplay.scrollHeight;
+        }
+
+        async function updateStatus() {
+            try {
+                const response = await fetch('/status', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    credentials: 'same-origin'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                updateStatusBadge(data.is_running);
+                currentStatus.textContent = data.current_status;
+                totalInvites.textContent = data.total_invites;
+                lastUpdate.textContent = data.last_update || '-';
+                
+                // Update account info if available
+                if (data.account_email) {
+                    document.getElementById('accountInfo').textContent = `Account: ${data.account_email}`;
+                }
+                
+                // Update logs if there are new messages
+                if (data.log_messages && data.log_messages.length > 0) {
+                    data.log_messages.forEach(msg => appendLog(msg));
+                }
+                
+                if (data.error) {
+                    showError(data.error, 'error');
+                    appendLog(`Error: ${data.error}`);
+                }
+            } catch (error) {
+                console.error('Failed to fetch status:', error);
+                showError('Failed to fetch status. Please try again.', 'error');
+            }
+        }
+
+        // Start status polling with a longer interval (10 seconds)
+        setInterval(updateStatus, 10000);
+        updateStatus(); // Initial status check
+
+        // Form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            try {
+                const formData = new FormData(form);
+                const categories = Array.from(formData.getAll('categories'));
+                
+                const data = {
+                    min_followers: parseInt(formData.get('min_followers')),
+                    max_followers: parseInt(formData.get('max_followers')),
+                    min_gmv: parseInt(formData.get('min_gmv')),
+                    categories: categories,
+                    max_invites: parseInt(formData.get('max_invites'))
+                };
+                
+                const response = await fetch('/start', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data),
+                    credentials: 'same-origin'
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to start bot');
+                }
+                
+                const result = await response.json();
+                updateStatusBadge(true);
+                showError('Bot started successfully', 'success');
+            } catch (error) {
+                console.error('Error:', error);
+                showError(error.message || 'Failed to start bot', 'error');
+            }
+        });
+
+        // Stop button
+        stopBtn.addEventListener('click', async () => {
+            try {
+                const response = await fetch('/stop', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    credentials: 'same-origin'
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to stop bot');
+                }
+                
+                const result = await response.json();
+                updateStatusBadge(false);
+                showError('Bot stopped successfully', 'success');
+            } catch (error) {
+                console.error('Error:', error);
+                showError(error.message || 'Failed to stop bot', 'error');
+            }
+        });
+    </script>
+</body>
+</html>
